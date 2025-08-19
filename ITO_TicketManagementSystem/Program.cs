@@ -62,16 +62,20 @@ public class Program
                     await roleManager.CreateAsync(new IdentityRole(role));
             }
 
-            // Admin
             await EnsureUserInRole(userManager, "admin@gmail.com", "Admin@123", "Admin");
-
-            // Employees (two accounts)
+           
             await EnsureUserInRole(userManager, "employee1@gmail.com", "Employee@123", "Employees");
             await EnsureUserInRole(userManager, "employee2@gmail.com", "Employee@123", "Employees");
-
+            await EnsureUserInRole(userManager, "employee3@gmail.com", "Employee@123", "Employees");
+            await EnsureUserInRole(userManager, "employee4@gmail.com", "Employee@123", "Employees");
+            
             await EnsureUserInRole(userManager, "HelpDeskTeam1@gmail.com", "HelpDesk@123", "Help Desk Team");
+            await EnsureUserInRole(userManager, "HelpDeskTeam2@gmail.com", "HelpDesk@123", "Help Desk Team");
+                        
             await EnsureUserInRole(userManager, "EngineeringTeam1@gmail.com", "Engineering@123", "Engineering Team");
-            await EnsureUserInRole(userManager, "EngineeringTeam2@gmail.com", "Engineering@321", "Engineering Team");
+            await EnsureUserInRole(userManager, "EngineeringTeam2@gmail.com", "Engineering@123", "Engineering Team");
+            await EnsureUserInRole(userManager, "EngineeringTeam3@gmail.com", "Engineering@123", "Engineering Team");
+            
 
         }
 
