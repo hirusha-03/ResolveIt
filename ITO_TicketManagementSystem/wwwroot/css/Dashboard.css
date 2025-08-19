@@ -1,0 +1,244 @@
+﻿/* Dashboard Global Styles*/
+:root {
+    --primary: #4361ee; /* 60% base color */
+    --secondary: #3f37c9; /* 30% complementary */
+    --accent: #4cc9f0; /* 10% accent (emerald/teal) */
+    --warning: #f8961e;
+    --danger: #f72585;
+    --success: #2e7d32;
+    --light: #f8f9fa;
+    --dark: #212529;
+}
+
+body {
+    background-color: #f5f7fa;
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    color: var(--dark);
+}
+
+/*   Common Card Styles*/
+  
+.card {
+    border: none;
+    border-radius: 0.75rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+    }
+
+    .card h6,
+    .card h5 {
+        font-weight: 600;
+        color: var(--secondary);
+    }
+
+/*   Summary Cards */
+.card-stat {
+    border-left: 4px solid var(--primary);
+    text-align: center;
+}
+
+    .card-stat.unassigned {
+        border-left-color: var(--primary);
+    }
+
+    .card-stat.assigned {
+        border-left-color: var(--warning);
+    }
+
+    .card-stat.pending {
+        border-left-color: var(--danger);
+    }
+
+    .card-stat.resolved {
+        border-left-color: var(--success);
+    }
+
+    .card-stat h3 {
+        font-weight: 700;
+        margin: 0;
+    }
+/* Ticket Status Badges */
+.badge {
+    padding: 0.4rem 0.7rem;
+    border-radius: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: capitalize; /* makes "in-progress" display as "In-progress" */
+}
+
+/* Keep your existing soft backgrounds */
+.status-new {
+    background: #e3f2fd;
+    color: var(--primary);
+}
+
+.status-in-progress {
+    background: #fff8e1;
+    color: var(--warning);
+}
+
+.status-pending {
+    background: #ffebee;
+    color: var(--danger);
+}
+
+.status-resolved {
+    background: #e8f5e9;
+    color: var(--success);
+}
+
+.status-closed {
+    background: #ececec;
+    color: var(--dark);
+}
+
+
+/* Tables */
+.table {
+    font-size: 0.9rem;
+}
+
+    .table th {
+        color: var(--secondary);
+        font-weight: 600;
+    }
+
+.table-hover tbody tr:hover {
+    background-color: #f1f4ff;
+}
+
+/* Buttons */
+.btn {
+    font-weight: 500;
+    border-radius: 0.4rem;
+}
+
+.btn-outline-primary {
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    transition: 0.2s ease;
+}
+
+    .btn-outline-primary:hover {
+        background: var(--primary);
+        color: #fff;
+    }
+
+.btn-danger {
+    background: var(--danger);
+    border: none;
+}
+
+    .btn-danger:hover {
+        background: #d61c6f;
+    }
+
+/* Help Desk Dashboard*/
+.helpdesk-dashboard h2 {
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.helpdesk-dashboard p {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.search-box {
+    position: relative;
+}
+
+    .search-box i {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        color: #6c757d;
+    }
+
+.search-input {
+    padding-left: 35px;
+}
+
+.filter-select {
+    padding-right: 30px;
+}
+
+.filter-icon {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    pointer-events: none;
+}
+
+/* Employee Dashboard */
+.employee-dashboard {
+    padding: 1rem;
+}
+
+    .employee-dashboard h1 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary);
+    }
+
+    .employee-dashboard .card {
+        background: #fff;
+        border-left: 4px solid var(--accent);
+    }
+
+/* Engineer Dashboard */
+.engineer-dashboard {
+    background: #ffffff;
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+    .engineer-dashboard h5 {
+        font-weight: 600;
+        color: var(--dark);
+    }
+
+    .engineer-dashboard .btn-outline-primary {
+        border-width: 2px;
+        font-weight: 500;
+    }
+
+        .engineer-dashboard .btn-outline-primary:hover {
+            background: var(--primary);
+            color: #fff;
+        }
+
+    .engineer-dashboard .text-muted {
+        font-style: italic;
+    }
+
+/*   Admin Dashboard */
+.admin-dashboard h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.admin-dashboard .card-header {
+    background: var(--light);
+    font-weight: 600;
+}
+
+.admin-dashboard table th {
+    background: var(--light);
+}
+
+.admin-dashboard .btn-success {
+    background: var(--success);
+    border: none;
+}
+
+    .admin-dashboard .btn-success:hover {
+        background: #256d24;
+    }

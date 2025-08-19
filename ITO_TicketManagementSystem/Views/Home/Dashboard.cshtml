@@ -1,0 +1,30 @@
+﻿@using ITO_TicketManagementSystem.Models
+@model IEnumerable<Ticket>
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+@if (User.IsInRole("Admin"))
+{
+    @await Html.PartialAsync("_AdminDashboard", Model)
+}
+else if (User.IsInRole("Employees"))
+{
+    @await Html.PartialAsync("_EmplyeeDashboard",Model)
+}
+else if (User.IsInRole("Help Desk Team"))
+{
+    @await Html.PartialAsync("_HelpDeskDashboard", Model)
+}
+else if (User.IsInRole("Engineering Team"))
+{
+    // Pass the model with tickets to the engineer dashboard partial
+    @await Html.PartialAsync("_EngineerTeamDashboard", Model)
+}
+else
+{
+    <div class="alert alert-warning" role="alert">
+        You do not have access to the dashboard.
+    </div>
+}

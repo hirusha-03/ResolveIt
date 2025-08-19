@@ -1,0 +1,54 @@
+﻿@model ITO_TicketManagementSystem.Models.ViewModels.TicketCommentsVM
+
+@{
+    ViewData["Title"] = "Add Comment";
+}
+
+<a href="javascript:history.back()" class="btn btn-secondary mb-3">
+    ← Back
+</a>
+
+
+<div class="container py-4">
+    <h2 class="mb-4">Add Comment</h2>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form asp-action="AddComment" method="post">
+                <!-- Hidden Ticket ID -->
+                <input type="hidden" asp-for="TicketId" />
+
+                <!-- Hidden current user details -->
+                <input type="hidden" asp-for="CreatedByUserId" />
+                <input type="hidden" asp-for="CreatedByUserName" />
+
+                <!-- Ticket title -->
+                <div class="mb-3">
+                    <label class="form-label">Ticket Title</label>
+                    <input type="text" class="form-control readonly-field" value="@Model.TicketTitle" readonly />
+                </div>
+
+                <!-- Current user display -->
+                <div class="mb-3">
+                    <label class="form-label">Your Name</label>
+                    <input type="text" class="form-control readonly-field" value="@Model.CreatedByUserName" readonly />
+                </div>
+
+                <!-- Comment input -->
+                <div class="mb-3">
+                    <label asp-for="NewComment" class="form-label">Your Comment</label>
+                    <textarea asp-for="NewComment" class="form-control" rows="3" placeholder="Type your comment here..."></textarea>
+                    <span asp-validation-for="NewComment" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Add Comment</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,21 @@
+﻿@model IEnumerable<ITO_TicketManagementSystem.Models.Ticket>
+
+@{
+    ViewData["Title"] = "My Assigned Tickets";
+}
+<a href="javascript:history.back()" class="btn btn-secondary mb-3">
+    ← Back
+</a>
+
+<div class="ticket-section shadow-sm">
+    <h4 class="mb-3">My Tickets</h4>
+
+    @if (Model != null && Model.Any())
+    {
+        @await Html.PartialAsync("_TicketListPartial", Model)
+    }
+    else
+    {
+        <p class="text-muted">No tickets found.</p>
+    }
+</div>

@@ -1,0 +1,140 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ITO_TicketManagementSystem</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/dashboard.css" />
+    <link rel="stylesheet" href="~/css/partials.css" />
+    <link rel="stylesheet" href="~/css/views.css" />
+    <link rel="stylesheet" href="~/ITO_TicketManagementSystem.styles.css" asp-append-version="true" />
+
+    @RenderSection("Styles", required: false)
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <!-- Navbar -->
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+            <div class="container-fluid">
+                <!-- Left: Logo + Nav Links -->
+                <a class="navbar-brand d-flex align-items-center me-3" asp-controller="Home" asp-action="Index">
+                    <img src="~/images/logo.jpeg" alt="Logo" class="logo-circle me-2" style="height:32px;width:32px;border-radius:50%;" />
+                    <span class="fw-bold">ResolveIT</span>
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+                        aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="mainNav">
+                    <!-- Left Nav Links -->
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewData["Title"]?.ToString() == "Dashboard" ? "active text-warning fw-semibold" : "")"
+                               asp-controller="Home" asp-action="Dashboard">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewData["Title"]?.ToString() == "Privacy" ? "active text-warning fw-semibold" : "")"
+                               asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                    </ul>
+
+                    <!-- Right Auth Block -->
+                    <ul class="navbar-nav ms-auto">
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <li class="nav-item d-flex align-items-center me-2 text-light small">
+                                Hello, @UserManager.GetUserName(User)
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn btn-outline-warning me-2" asp-area="Identity" asp-page="/Account/Manage/Index">
+                                    My Account
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <form asp-area="Identity" asp-page="/Account/Logout" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-warning">Log out</button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="btn btn-outline-light me-2" asp-area="Identity" asp-page="/Account/Login">Log in</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn btn-warning" asp-area="Identity" asp-page="/Account/Register">Sign up</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-fill container-fluid px-4 py-3">
+            @RenderBody()
+        
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer bg-dark text-light text-center py-3 mt-auto">
+        <div class="container">
+            <span>&copy; @DateTime.Now.Year - ResolveIt_TicketManagementSystem</span> |
+            <a class="text-warning text-decoration-none" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <!-- Global Toast Notification Container -->
+    <div id="notification-container"
+         class="position-fixed top-0 start-50 translate-middle-x p-3"
+         style="z-index: 1100"></div>
+
+    <!-- Global Toast Logic -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const container = document.getElementById("notification-container");
+
+            @if (TempData["Success"] != null)
+            {
+                    <text> showToast("@TempData["Success"]", "success"); </text>
+            }
+            @if (TempData["Error"] != null)
+            {
+                    <text> showToast("@TempData["Error"]", "danger"); </text>
+            }
+
+            function showToast(message, type) {
+                const wrapper = document.createElement("div");
+                wrapper.innerHTML = `
+                    <div class="toast align-items-center text-bg-${type} border-0 mb-2" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="d-flex">
+                            <div class="toast-body">${message}</div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                    </div>`;
+                container.appendChild(wrapper);
+                const toast = new bootstrap.Toast(wrapper.querySelector(".toast"));
+                toast.show();
+            }
+        });
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

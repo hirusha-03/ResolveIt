@@ -1,0 +1,152 @@
+﻿@model ITO_TicketManagementSystem.Models.ViewModels.TicketEditVM
+@{
+    ViewData["Title"] = "Edit Ticket";
+}
+<a href="javascript:history.back()" class="btn btn-secondary mb-3">
+    ← Back
+</a>
+
+<div class="ticket-container">
+    <div class="ticket-header">
+        <h3>Edit Ticket #@Model.TicketId</h3>
+        <p class="subtitle">Update ticket details and status</p>
+    </div>
+
+    <form asp-controller="Ticket"
+          asp-action="Update"
+          asp-route-id="@Model.TicketId"
+          method="post"
+          enctype="multipart/form-data"
+          class="ticket-form">
+        @Html.AntiForgeryToken()
+
+        <!-- Validation Summary -->
+        <div asp-validation-summary="All" class="validation-summary"></div>
+
+        <input asp-for="TicketId" type="hidden" />
+
+        <!-- Title -->
+        <div class="form-group">
+            <label asp-for="Title" class="form-label"></label>
+            <input asp-for="Title" class="form-control" placeholder="Enter ticket title" />
+            <span asp-validation-for="Title" class="validation-message"></span>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group">
+            <label asp-for="Description" class="form-label"></label>
+            <textarea asp-for="Description" rows="5" class="form-control" placeholder="Describe your issue in detail"></textarea>
+            <span asp-validation-for="Description" class="validation-message"></span>
+        </div>
+
+        <!-- Assign Type -->
+        <div class="form-group">
+            <label asp-for="AssignType" class="form-label">Assign Type</label>
+            <select asp-for="AssignType" class="form-control">
+                <option value="Hardware">Hardware</option>
+                <option value="Software">Software</option>
+                <option value="Network">Network</option>
+                <option value="Access">Access</option>
+                <option value="Other">Other</option>
+            </select>
+            <span asp-validation-for="AssignType" class="validation-message"></span>
+        </div>
+
+        <!-- Status -->
+        <div class="form-group">
+            <label asp-for="Status" class="form-label">Status</label>
+            <select asp-for="Status" class="form-control">
+                <option value="New">New</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Resolved">Resolved</option>
+                <option value="Closed">Closed</option>
+            </select>
+            <span asp-validation-for="Status" class="validation-message"></span>
+        </div>
+
+        <!-- Attachment Section -->
+        <div class="attachment-section">
+            <div class="section-header">
+                <h4>Attachment</h4>
+                <p class="section-description">Manage file attachments</p>
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(Model.ExistingAttachment))
+            {
+                <div class="existing-attachment">
+                    <div class="attachment-info">
+                        <i class="fas fa-paperclip"></i>
+                        <a href="@Model.ExistingAttachment" target="_blank" class="attachment-link">View current attachment</a>
+                    </div>
+                    <div class="remove-attachment">
+                        <label class="checkbox-label">
+                            <input asp-for="RemoveAttachment" type="checkbox" />
+                            <span class="checkmark"></span>
+                            Remove current attachment
+                        </label>
+                    </div>
+                </div>
+            }
+
+            <div class="attachment-options">
+                <div class="form-group">
+                    <label asp-for="Attachment" class="form-label">Replace with URL or path</label>
+                    <input asp-for="Attachment" class="form-control" placeholder="e.g. /uploads/abc.pdf or https://..." />
+                    <span asp-validation-for="Attachment" class="validation-message"></span>
+                </div>
+
+                <div class="divider"><span>OR</span></div>
+
+                <div class="form-group">
+                    <label asp-for="AttachmentFile" class="form-label">Upload a new file</label>
+                    <div class="file-upload">
+                        <label class="upload-btn">
+                            Choose File
+                            <input asp-for="AttachmentFile" type="file" accept=".png,.jpg,.jpeg,.pdf,.txt,.doc,.docx" />
+                        </label>
+                        <span class="file-info">No file chosen</span>
+                    </div>
+                    <span class="file-hint">Max 5 MB (PNG, JPG, PDF, TXT, DOC)</span>
+                    <span asp-validation-for="AttachmentFile" class="validation-message"></span>
+                </div>
+            </div>
+
+            <p class="note">
+                <i class="fas fa-info-circle"></i> If both are provided, the uploaded file will be saved and used.
+            </p>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="submit-btn">
+                <i class="fas fa-save"></i> Update Ticket
+            </button>
+        </div>
+    </form>
+
+    <!-- Server-side validation fallback -->
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="server-validation">
+            <ul>
+                @foreach (var kv in ViewData.ModelState)
+                {
+                    foreach (var err in kv.Value.Errors)
+                    {
+                        <li><strong>@(string.IsNullOrEmpty(kv.Key) ? "General" : kv.Key)</strong>: @err.ErrorMessage</li>
+                    }
+                }
+            </ul>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Update file name display when file is selected
+        document.querySelector('input[type="file"]').addEventListener('change', function(e) {
+            const fileName = e.target.files[0] ? e.target.files[0].name : 'No file chosen';
+            document.querySelector('.file-info').textContent = fileName;
+        });
+    </script>
+}

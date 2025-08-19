@@ -1,0 +1,170 @@
+﻿@using System.Security.Claims
+@using Microsoft.AspNetCore.Identity
+@model IEnumerable<ITO_TicketManagementSystem.Models.Ticket>
+
+
+@* <a href="javascript:history.back()" class="btn btn-secondary mb-3">
+    ← Back
+</a> *@
+
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="row">
+            <!-- Search -->
+            <div class="col-md-4 mb-2">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="ticketSearch" class="form-control search-input" placeholder="Search tickets...">
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="col-md-8">
+                <div class="row g-2">
+                    <div class="col-sm-6 col-md-3">
+                        <select id="statusFilter" class="form-select">
+                            <option value="">Status: All</option>
+                            <option>New</option>
+                            <option>In Progress</option>
+                            <option>Pending</option>
+                            <option>Resolved</option>
+                            <option>Closed</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <select id="typeFilter" class="form-select">
+                            <option value="">Type: All</option>
+                            <option>Hardware</option>
+                            <option>Software</option>
+                            <option>Network</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <select id="assignmentFilter" class="form-select">
+                            <option value="">Assignment: All</option>
+                            <option>Assigned to me</option>
+                            <option>Unassigned</option>
+                            <option>Assigned to others</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <select id="sortFilter" class="form-select">
+                            <option value="">Sort by: Latest</option>
+                            <option>Oldest</option>
+                            <option>Priority</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<table class="table table-hover align-middle ticket-table">
+    <thead class="table-light">
+        <tr>
+            <th>Ticket ID</th>
+            <th>Title</th>
+            <th>Assign Type</th>
+            <th>Status</th>
+            <th>Created By</th>
+            <th>Assigned To</th>
+            <th>Comments</th>
+            <th class="text-end">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var t in Model)
+            {
+                <tr>
+                    <td class="text-muted">#@t.TicketId</td>
+                    <td class="fw-semibold">@t.Title</td>
+                    <td>@t.AssignType</td>
+
+                    <!-- STATUS -->
+                    <td>
+                        @if (User.IsInRole("Engineering Team") ||
+                                        (User.IsInRole("Help Desk Team") ||
+                                        (User.IsInRole("Employees") && t.AssignedToUserId == User.FindFirstValue(ClaimTypes.NameIdentifier))))
+                        {
+                            <form asp-controller="Ticket" asp-action="EditStatus" method="post" class="d-flex status-form">
+                                <input type="hidden" name="id" value="@t.TicketId" />
+                                <select name="status" class="form-select form-select-sm me-2">
+                                    <option value="New" selected="@("New" == t.Status)">New</option>
+                                    <option value="In Progress" selected="@("In Progress" == t.Status)">In Progress</option>
+                                    <option value="Pending" selected="@("Pending" == t.Status)">Pending</option>
+                                    <option value="Resolved" selected="@("Resolved" == t.Status)">Resolved</option>
+                                </select>
+                                <button type="submit" class="btn btn-sm btn-primary">Save</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <span class="badge status-badge">@t.Status</span>
+                        }
+                    </td>
+
+                    <!-- CREATED BY -->
+                    <td>@(t.CreatedByUser?.UserName ?? "-")</td>
+
+                    <!-- ASSIGNED TO -->
+                    <td>
+                        @if (string.IsNullOrEmpty(t.AssignedToUserId))
+                        {
+                            <a asp-action="AssignTicket" asp-route-ticketId="@t.TicketId"
+                               class="btn btn-sm btn-primary">Assign</a>
+                        }
+                        else if (User.IsInRole("Help Desk Team"))
+                        {
+                            if (t.AssignedToUserRole == "Help Desk Team")
+                            {
+                                <a asp-action="AssignTicket" asp-route-ticketId="@t.TicketId"
+                                   class="btn btn-sm btn-warning">Reassign</a>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success">Assigned</span>
+                            }
+                        }
+                        else
+                        {
+                            @(t.AssignedToUser?.UserName ?? "-")
+                        }
+                    </td>
+
+                    <!-- COMMENTS -->
+                    <td>
+                        <div class="d-flex gap-2">
+                            <a asp-controller="Ticket" asp-action="GetComments" asp-route-ticketId="@t.TicketId"
+                               class="btn btn-outline-primary btn-sm">View</a>
+                            <a asp-controller="Ticket" asp-action="AddComment" asp-route-ticketId="@t.TicketId"
+                               class="btn btn-outline-secondary btn-sm">Add</a>
+                        </div>
+                    </td>
+
+                    <!-- ACTIONS -->
+                    <td class="text-end">
+                        <a asp-controller="Ticket" asp-action="Details" asp-route-id="@t.TicketId"
+                           class="btn btn-sm btn-outline-primary me-1">Open</a>
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-controller="Ticket" asp-action="Delete" asp-route-id="@t.TicketId"
+                               class="btn btn-sm btn-outline-danger">Delete</a>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="8" class="text-center text-muted py-4">No tickets found.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+

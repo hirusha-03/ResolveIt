@@ -1,0 +1,22 @@
+﻿@model IEnumerable<ITO_TicketManagementSystem.Models.Ticket>
+
+@{
+    var tickets = Model ?? Enumerable.Empty<ITO_TicketManagementSystem.Models.Ticket>();
+}
+<a href="javascript:history.back()" class="btn btn-secondary mb-3">
+    ← Back
+</a>
+
+
+<div class="ticket-wrapper card shadow-sm rounded-3">
+    <div class="card-body">
+        @if (tickets.Any())
+        {
+            @await Html.PartialAsync("_TicketListPartial", Model)
+        }
+        else
+        {
+            <p class="text-muted text-center my-3">No tickets are currently assigned to you.</p>
+        }
+    </div>
+</div>

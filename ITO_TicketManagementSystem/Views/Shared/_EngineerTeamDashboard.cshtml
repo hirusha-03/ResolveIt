@@ -1,0 +1,79 @@
+﻿@model IEnumerable<ITO_TicketManagementSystem.Models.Ticket>
+@using System.Security.Claims
+
+@{
+    ViewData["Title"] = "Engineer Team Dashboard";
+
+    var meId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+    var assignedTickets = Model?
+        .Where(t => t.AssignedToUserId == meId)
+        .ToList() ?? new List<ITO_TicketManagementSystem.Models.Ticket>();
+
+    int assignedCount = assignedTickets.Count;
+    int newCount = assignedTickets.Count(t => t.Status == "New");
+    int inProgressCount = assignedTickets.Count(t => t.Status == "In Progress");
+    int pendingCount = assignedTickets.Count(t => t.Status == "Pending");
+    int resolvedCount = assignedTickets.Count(t => t.Status == "Resolved");
+}
+
+<div class="container-fluid py-4">
+
+    <!-- 🔹 Stat Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm h-100 text-center">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Assigned</p>
+                    <h3 class="fw-bold text-primary">@assignedCount</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm h-100 text-center">
+                <div class="card-body">
+                    <p class="text-muted mb-1">New</p>
+                    <h3 class="fw-bold text-info">@newCount</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm h-100 text-center">
+                <div class="card-body">
+                    <p class="text-muted mb-1">In Progress</p>
+                    <h3 class="fw-bold text-warning">@inProgressCount</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm h-100 text-center">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Resolved</p>
+                    <h3 class="fw-bold text-success">@resolvedCount</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🔹 Assigned Tickets Preview -->
+    <div class="ticket-wrapper card shadow-sm rounded-3">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">My Assigned Tickets</h5>
+            <a asp-controller="Ticket"
+               asp-action="DisplayAssigned"
+               class="btn btn-sm btn-outline-primary">
+                View All
+            </a>
+        </div>
+        <div class="card-body">
+            @if (assignedTickets.Any())
+            {
+                @await Html.PartialAsync("_TicketListPartial", assignedTickets.Take(3))
+            }
+            else
+            {
+                <p class="text-muted text-center my-3">No tickets are currently assigned to you.</p>
+            }
+        </div>
+    </div>
+</div>

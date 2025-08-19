@@ -1,0 +1,87 @@
+﻿/* Ticket tables */
+.ticket-table {
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #fff;
+}
+
+    .ticket-table thead th {
+        background: #f8f9fa;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        color: #495057;
+    }
+
+    .ticket-table tbody tr:hover {
+        background-color: #f1f5ff;
+    }
+
+/* Status badges */
+.status-badge {
+    padding: 0.35em 0.65em;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 10px;
+    background-color: #e9ecef;
+    color: #495057;
+}
+
+/* Editable status form */
+.status-form select {
+    min-width: 120px;
+}
+
+.status-form button {
+    white-space: nowrap;
+}
+
+/* Button group for comments */
+.btn-group-vertical .btn {
+    border-radius: 6px;
+    margin-bottom: 4px;
+}
+/* Wrapper around ticket lists */
+.ticket-wrapper {
+    margin-bottom: 1.5rem;
+    border: 1px solid #dee2e6;
+    background-color: #fff;
+}
+
+    .ticket-wrapper .card-body {
+        padding: 1.25rem;
+    }
+/* ===== Navbar Auth Styling ===== */
+.navbar-nav .btn {
+    border-radius: 20px;
+    font-weight: 500;
+    padding: 0.4rem 1rem;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Outline button (Log in / My Account) */
+.navbar-nav .btn-outline-primary {
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+    .navbar-nav .btn-outline-primary:hover {
+        background-color: var(--primary);
+        color: #fff;
+    }
+
+/* Solid button (Sign up / Logout) */
+.navbar-nav .btn-primary {
+    background-color: var(--secondary);
+    border-color: var(--secondary);
+}
+
+    .navbar-nav .btn-primary:hover {
+        background-color: var(--primary);
+        border-color: var(--primary);
+    }
+
+/* Hello, username */
+.navbar-nav .text-muted {
+    font-size: 0.9rem;
+}

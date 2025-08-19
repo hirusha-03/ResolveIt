@@ -1,0 +1,66 @@
+﻿@model IEnumerable<ITO_TicketManagementSystem.Models.Ticket>
+@using System.Security.Claims
+
+@{
+    var meId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+    // Tickets created by me
+    var createdTickets = Model.Where(t => t.CreatedByUserId == meId).ToList();
+
+    // Tickets assigned to me
+    var assignedTickets = Model.Where(t => t.AssignedToUserId == meId).ToList();
+}
+
+<div class="container">
+    <h1>Employee Dashboard</h1>
+    <p>Welcome back, @User.Identity?.Name</p>
+
+    <div class="d-flex gap-2">
+       
+        <a class="btn btn-primary" asp-controller="Ticket" asp-action="Create">Create New Ticket</a>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm p-3 text-center">
+                <h5>My Created Tickets</h5>
+                <h2>@createdTickets.Count</h2>
+                <a asp-controller="Ticket" asp-action="DisplayCreated" class="btn btn-primary btn-sm">View All</a>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm p-3 text-center">
+                <h5>My Assigned Tickets</h5>
+                <h2>@assignedTickets.Count</h2>
+                <a asp-controller="Ticket" asp-action="DisplayAssigned" class="btn btn-primary btn-sm">View All</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recently Created Tickets -->
+    <div class="bg-white rounded-3 shadow-sm p-3 mb-4">
+        <h5 class="mb-3">Recently Created Tickets</h5>
+        @if (createdTickets.Any())
+        {
+            @await Html.PartialAsync("_TicketListPartial", createdTickets.Take(2))
+        }
+        else
+        {
+            <p class="text-muted">No tickets created by you.</p>
+        }
+    </div>
+
+    <!-- Recently Assigned Tickets -->
+    <div class="bg-white rounded-3 shadow-sm p-3">
+        <h5 class="mb-3">Recently Assigned Tickets</h5>
+        @if (assignedTickets.Any())
+        {
+            @await Html.PartialAsync("_TicketListPartial", assignedTickets.Take(2))
+        }
+        else
+        {
+            <p class="text-muted">No tickets assigned to you.</p>
+        }
+    </div>
+</div>

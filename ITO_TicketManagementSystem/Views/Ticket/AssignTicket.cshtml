@@ -1,0 +1,49 @@
+﻿@model ITO_TicketManagementSystem.Models.ViewModels.AssignTicketVM
+
+@{
+    ViewData["Title"] = "Assign Ticket";
+}
+
+<div class="container py-4">
+    <h2 class="mb-4">Assign Ticket</h2>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form asp-action="AssignTicket" method="post">
+                <!-- Hidden TicketId -->
+                <input type="hidden" asp-for="TicketId" />
+
+                <!-- Ticket ID (read-only) -->
+                <div class="mb-3">
+                    <label class="form-label">Ticket ID</label>
+                    <input type="text" class="form-control readonly-field" value="@Model.TicketId" readonly />
+                </div>
+
+                <!-- Ticket Title (read-only) -->
+                <div class="mb-3">
+                    <label class="form-label">Ticket Title</label>
+                    <input type="text" class="form-control readonly-field" value="@Model.TicketTitle" readonly />
+                </div>
+
+                <!-- Engineer dropdown -->
+                <div class="mb-3">
+                    <label asp-for="AssignedToUserId" class="form-label">Assign to Engineer</label>
+                    <select asp-for="AssignedToUserId" asp-items="Model.Engineers" class="form-select">
+                        <option value="">-- Select Engineer --</option>
+                    </select>
+                    <span asp-validation-for="AssignedToUserId" class="text-danger"></span>
+                </div>
+
+                <!-- Buttons -->
+                <button type="submit" class="btn btn-primary">Assign</button>
+                <a asp-action="DisplayAll" class="btn btn-outline-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

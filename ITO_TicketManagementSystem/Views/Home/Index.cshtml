@@ -1,0 +1,234 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+@{
+    ViewData["Title"] = "Home";
+}
+
+@section Styles {
+    <style>
+        /* Hero */
+        .hero {
+            position: relative;
+            border-radius: 1.25rem;
+            padding: 4rem 1.25rem;
+            background: linear-gradient(135deg, #0d6efd 0%, #6f42c1 100%);
+            color: #fff;
+            overflow: hidden;
+        }
+
+            .hero::after {
+                content: "";
+                position: absolute;
+                inset: -30%;
+                background: radial-gradient(60% 60% at 20% 20%, rgba(255,255,255,.25), transparent 60%), radial-gradient(40% 40% at 80% 0%, rgba(255,255,255,.15), transparent 60%);
+                filter: blur(40px);
+            }
+
+        .feature-card {
+            border: 1px solid rgba(0,0,0,.06);
+            border-radius: 1rem;
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+
+            .feature-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 1rem 2rem rgba(0,0,0,.1);
+            }
+
+        .icon-badge {
+            width: 44px;
+            height: 44px;
+            border-radius: .75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cta {
+            background: #0b5ed7;
+            border-radius: 1rem;
+        }
+
+        .text-muted-2 {
+            color: #6c757d;
+        }
+        @@media (min-width: 768px) {
+            .hero
+
+        {
+            padding: 5rem 3rem;
+        }
+
+        }
+    </style>
+}
+
+<!-- HERO -->
+<section class="hero mb-5">
+    <div class="container text-center position-relative">
+        <h1 class="display-5 fw-bold mb-3">Streamline Your IT Support</h1>
+        <h2 class="h1 fw-bold mb-3">with our Ticket System</h2>
+        <p class="lead mb-4">
+            A comprehensive solution for managing support requests, tracking issues, and improving team collaboration.
+        </p>
+
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <div class="d-flex flex-wrap gap-2 justify-content-center">
+                <a class="btn btn-light btn-lg px-4" asp-area="Identity" asp-page="/Account/Manage/Index">My account</a>
+                <form asp-area="Identity" asp-page="/Account/Logout" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-outline-light btn-lg px-4">Log out</button>
+                </form>
+            </div>
+        }
+        else
+        {
+            <div class="d-flex flex-wrap gap-2 justify-content-center">
+                <a class="btn btn-light btn-lg px-4" asp-area="Identity" asp-page="/Account/Login">Get Started</a>
+                <a class="btn btn-outline-light btn-lg px-4" href="#features">View Features</a>
+            </div>
+        }
+    </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features" class="container mb-5">
+    <div class="text-center mb-4">
+        <h3 class="fw-bold">Powerful Features for IT Support Teams</h3>
+        <p class="text-muted-2 mb-0">Everything you need to manage and resolve IT support requests efficiently.</p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-6 col-lg-4">
+            <div class="p-4 bg-white feature-card h-100">
+                <div class="d-flex">
+                    <div class="icon-badge me-3" style="background:#0d6efd;">
+                        <!-- Ticket icon -->
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 7h18v4a2 2 0 1 1 0 2v4H3v-4a2 2 0 1 1 0-2V7zM8 12h8" stroke="white" stroke-width="2" stroke-linecap="round" /></svg>
+                    </div>
+                    <div>
+                        <h5 class="mb-1">Ticket Management</h5>
+                        <p class="text-muted-2 mb-0">Create, track, and manage tickets with priorities and categories.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <div class="p-4 bg-white feature-card h-100">
+                <div class="d-flex">
+                    <div class="icon-badge me-3" style="background:#198754;">
+                        <!-- Check icon -->
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                    </div>
+                    <div>
+                        <h5 class="mb-1">Efficient Resolution</h5>
+                        <p class="text-muted-2 mb-0">Automated workflows, notifications, and knowledge base integration.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <div class="p-4 bg-white feature-card h-100">
+                <div class="d-flex">
+                    <div class="icon-badge me-3" style="background:#6f42c1;">
+                        <!-- Users icon -->
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M16 11c1.657 0 3-1.79 3-4s-1.343-4-3-4-3 1.79-3 4 1.343 4 3 4zM8 13c-2.21 0-4 2.015-4 4.5V20h8v-2.5C12 15.015 10.21 13 8 13zM16 13c-1.657 0-3 1.79-3 4v3h6v-3c0-2.21-1.343-4-3-4zM8 11c1.657 0 3-1.79 3-4S9.657 3 8 3 5 4.79 5 7s1.343 4 3 4z" fill="white" /></svg>
+                    </div>
+                    <div>
+                        <h5 class="mb-1">Role-Based Access</h5>
+                        <p class="text-muted-2 mb-0">Different views for employees, help desk, engineers, and admins.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <div class="p-4 bg-white feature-card h-100">
+                <div class="d-flex">
+                    <div class="icon-badge me-3" style="background:#ffc107;">
+                        <!-- Clock icon -->
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 8v5l3 2M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                    </div>
+                    <div>
+                        <h5 class="mb-1">SLA Tracking</h5>
+                        <p class="text-muted-2 mb-0">Monitor response and resolution times against SLAs.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <div class="p-4 bg-white feature-card h-100">
+                <div class="d-flex">
+                    <div class="icon-badge me-3" style="background:#dc3545;">
+                        <!-- Chart icon -->
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 3v18h18M7 13v5M12 9v9M17 5v13" stroke="white" stroke-width="2" stroke-linecap="round" /></svg>
+                    </div>
+                    <div>
+                        <h5 class="mb-1">Reporting & Analytics</h5>
+                        <p class="text-muted-2 mb-0">Insights on volume, resolution times, and team performance.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <div class="p-4 bg-white feature-card h-100">
+                <div class="d-flex">
+                    <div class="icon-badge me-3" style="background:#6610f2;">
+                        <!-- Chat icon -->
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M21 15a4 4 0 0 1-4 4H7l-4 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v8z" stroke="white" stroke-width="2" stroke-linejoin="round" /></svg>
+                    </div>
+                    <div>
+                        <h5 class="mb-1">Communication Tools</h5>
+                        <p class="text-muted-2 mb-0">Comments, notifications, and email integration to stay aligned.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="container mb-5">
+    <div class="cta text-center text-white p-5">
+        <h3 class="fw-bold mb-2">Ready to get started?</h3>
+
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <p class="mb-4">Welcome back, @User.Identity?.Name! 🚀</p>
+            <div class="d-flex flex-wrap gap-2 justify-content-center">
+                <a class="btn btn-light btn-lg px-4" asp-area="" asp-controller="Ticket" asp-action="Create">Raise a Ticket</a>
+                <a class="btn btn-outline-light btn-lg px-4" asp-area="" asp-controller="Ticket" asp-action="Display">View My Tickets</a>
+            </div>
+        }
+        else
+        {
+            <p class="mb-4">Create an account or log in to raise your first ticket.</p>
+            <div class="d-flex flex-wrap gap-2 justify-content-center">
+                <a class="btn btn-light btn-lg px-4" asp-area="Identity" asp-page="/Account/Register">Sign up for free</a>
+                <a class="btn btn-outline-light btn-lg px-4" asp-area="Identity" asp-page="/Account/Login">Log in</a>
+            </div>
+        }
+    </div>
+</section>
+
+
+@section Scripts {
+    <script>
+        // Smooth-scroll for "View Features" anchor (pure JS)
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => {
+                const id = a.getAttribute('href');
+                const el = document.querySelector(id);
+                if (el) {
+                    e.preventDefault();
+                    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+}

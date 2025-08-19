@@ -1,0 +1,187 @@
+﻿@model IEnumerable<ITO_TicketManagementSystem.Models.Ticket>
+@using System.Security.Claims
+
+@{
+    ViewData["Title"] = "Help Desk Dashboard";
+
+    // ---- Counters (computed from Model) ----
+    var meId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+    int unassignedCount = Model?.Count(t => string.IsNullOrEmpty(t.AssignedToUserId)) ?? 0;
+    int assignedToMeCount = Model?.Count(t => t.AssignedToUserId == meId) ?? 0;
+    int pendingCount = Model?.Count(t => t.Status == "Pending") ?? 0;
+
+    var today = DateTime.Now.Date;
+    int resolvedTodayCount = Model?.Count(t => t.Status == "Resolved") ?? 0;
+}
+
+
+
+
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h2 class="fw-bold">Help Desk Dashboard</h2>
+            <p class="text-muted">Manage and triage incoming support requests</p>
+        </div>
+    </div>
+
+    <!-- Stats Cards (computed) -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card card-stat unassigned h-100">
+                <div class="card-body text-center">
+                    <p class="text-muted mb-1">Unassigned</p>
+                    <h3 class="fw-bold text-primary">@ViewBag.Unassigned</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card card-stat assigned h-100">
+                <div class="card-body text-center">
+                    <p class="text-muted mb-1">Assigned to me</p>
+                    <h3 class="fw-bold text-warning">@ViewBag.AssignedToMe</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card card-stat pending h-100">
+                <div class="card-body text-center">
+                    <p class="text-muted mb-1">Pending</p>
+                    <h3 class="fw-bold text-danger">@ViewBag.Pending</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card card-stat resolved h-100">
+                <div class="card-body text-center">
+                    <p class="text-muted mb-1">Resolved today</p>
+                    <h3 class="fw-bold text-success">@ViewBag.ResolvedToday</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tickets List -->
+    <div class="card shadow-sm border-0">
+        <div class="card-header d-flex justify-content-between align-items-center bg-light">
+            <h5 class="card-title mb-0">Recent Tickets</h5>
+            <a href="#" id="viewAllTicketsBtn" class="btn btn-sm btn-outline-primary">View All</a>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <div id="tickets-container" aria-live="polite"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        (function () {
+          const container = document.getElementById('tickets-container');
+          const viewAllBtn = document.getElementById('viewAllTicketsBtn');
+
+          async function loadTickets(preview = true) {
+            const endpoint = '@Url.Action("DisplayAll", "Ticket")' + (preview ? "?preview=true" : "");
+            try {
+              const res = await fetch(endpoint, { headers: { 'X-Requested-With': 'XMLHttpRequest' }});
+              if (!res.ok) throw new Error("Failed to load tickets");
+              container.innerHTML = await res.text();
+            } catch (e) {
+              container.innerHTML = '<div class="alert alert-danger">Error loading tickets.</div>';
+            }
+          }
+
+          // Load only 3 tickets first
+          loadTickets(true);
+
+          // On "View All" click → load full list
+          viewAllBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            loadTickets(false);
+            viewAllBtn.style.display = "none"; // hide button after showing all
+          });
+        })();
+
+           
+        (function () {
+          const container = document.getElementById('tickets-container');
+          const searchInput = document.getElementById('ticketSearch');
+          const statusFilter = document.getElementById('statusFilter');
+          const typeFilter = document.getElementById('typeFilter');
+          const assignmentFilter = document.getElementById('assignmentFilter');
+          const sortFilter = document.getElementById('sortFilter');
+
+          async function loadTickets() {
+            const params = new URLSearchParams({
+              search: searchInput.value,
+              status: statusFilter.value,
+              type: typeFilter.value,
+              assignment: assignmentFilter.value,
+              sort: sortFilter.value
+            });
+
+            const endpoint = '@Url.Action("DisplayAll", "Ticket")' + "?" + params.toString();
+
+            try {
+              const res = await fetch(endpoint, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+              if (!res.ok) throw new Error("Failed to load tickets");
+              container.innerHTML = await res.text();
+            } catch (e) {
+              container.innerHTML = '<div class="alert alert-danger">Error loading tickets.</div>';
+            }
+          }
+
+          // Attach events
+          searchInput.addEventListener("input", loadTickets);
+          statusFilter.addEventListener("change", loadTickets);
+          typeFilter.addEventListener("change", loadTickets);
+          assignmentFilter.addEventListener("change", loadTickets);
+          sortFilter.addEventListener("change", loadTickets);
+
+          // Initial load
+          loadTickets();
+        })();
+
+
+ 
+            document.addEventListener("DOMContentLoaded", function () {
+                const searchInput = document.getElementById("ticketSearch");
+                const statusFilter = document.getElementById("statusFilter");
+                const typeFilter = document.getElementById("typeFilter");
+                const assignmentFilter = document.getElementById("assignmentFilter");
+                const sortFilter = document.getElementById("sortFilter");
+                const rows = document.querySelectorAll(".ticket-table tbody tr");
+
+                function filterTickets() {
+                    const search = searchInput.value.toLowerCase();
+                    const status = statusFilter.value;
+                    const type = typeFilter.value;
+                    const assignment = assignmentFilter.value;
+
+                    rows.forEach(row => {
+                        const title = row.querySelector("td:nth-child(2)")?.innerText.toLowerCase() || "";
+                        const assignType = row.querySelector("td:nth-child(3)")?.innerText || "";
+                        const ticketStatus = row.querySelector("td:nth-child(4)")?.innerText || "";
+                        const assignedTo = row.querySelector("td:nth-child(6)")?.innerText || "";
+
+                        let visible = true;
+
+                        if (search && !title.includes(search)) visible = false;
+                        if (status && ticketStatus !== status) visible = false;
+                        if (type && assignType !== type) visible = false;
+                        if (assignment === "Unassigned" && assignedTo !== "Assign") visible = false;
+
+                        row.style.display = visible ? "" : "none";
+                    });
+                }
+
+                [searchInput, statusFilter, typeFilter, assignmentFilter, sortFilter]
+                    .forEach(el => el?.addEventListener("input", filterTickets));
+
+                filterTickets();
+            });
+   
+
+
+    </script>

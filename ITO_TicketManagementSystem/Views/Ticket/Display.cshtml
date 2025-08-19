@@ -1,0 +1,87 @@
+﻿@using System.Security.Claims
+@model IEnumerable<ITO_TicketManagementSystem.Models.Ticket>
+@{
+    ViewData["Title"] = "Tickets";
+    Func<string, string> BadgeClass = status => status switch
+    {
+        "New" => "badge bg-secondary",
+        "In Progress" => "badge bg-warning text-dark",
+        "Pending" => "badge bg-info text-dark",
+        "Resolved" => "badge bg-success",
+        "Closed" => "badge bg-dark",
+        _ => "badge bg-light text-dark"
+    };
+}
+<a href="javascript:history.back()" class="btn btn-secondary mb-3">
+    ← Back
+</a>
+
+<div class="container py-4">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <div>
+            <h1 class="h4 mb-1">Tickets</h1>
+            <div class="text-muted small">All recent tickets (newest first)</div>
+        </div>
+        <div class="d-flex gap-2">
+            @* <a class="btn btn-outline-secondary" asp-controller="Home" asp-action="Dashboard">Back to Dashboard</a> *@
+            <a class="btn btn-primary" asp-controller="Ticket" asp-action="Create">Create New Ticket</a>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table align-middle mb-0 tickets-table">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 110px;">Ticket #</th>
+                            <th>Title</th>
+                            <th style="width: 140px;">Assign Type</th>
+                            <th style="width: 140px;">Status</th>
+                            <th style="width: 180px;">Updated</th>
+                            <th style="width: 210px;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var t in Model)
+                            {
+                                <tr>
+                                    <td class="text-muted">#@t.TicketId</td>
+                                    <td>
+                                        <div class="fw-semibold">@t.Title</div>
+                                        <div class="small text-muted ticket-description">@t.Description</div>
+                                    </td>
+                                    <td>@t.AssignType</td>
+                                    <td><span class="@BadgeClass(t.Status)">@t.Status</span></td>
+                                    <td class="text-muted small">@t.UpdatedAt?.ToString("g") ?? "-"</td>
+                                    <td class="text-end">
+                                        <a class="btn btn-sm btn-outline-primary me-1"
+                                           asp-controller="Ticket" asp-action="Details" asp-route-id="@t.TicketId">
+                                            Open
+                                        </a>
+
+                                        @if (User.IsInRole("Admin"))
+                                        {
+                                            <a class="btn btn-sm btn-outline-danger"
+                                               asp-controller="Ticket" asp-action="Delete" asp-route-id="@t.TicketId">
+                                                Delete
+                                            </a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-4">No tickets found.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

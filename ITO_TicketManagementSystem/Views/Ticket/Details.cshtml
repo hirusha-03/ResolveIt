@@ -1,0 +1,125 @@
+﻿@model ITO_TicketManagementSystem.Models.ViewModels.TicketDetailsVM
+
+@{
+    ViewData["Title"] = "Ticket Details";
+}
+<a href="javascript:history.back()" class="btn btn-secondary mb-3">
+    ← Back
+</a>
+
+
+<div class="container py-4">
+    <!-- 🔹 Ticket Info -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h2 class="mb-3 text-primary">Ticket #@Model.Ticket.TicketId - @Model.Ticket.Title</h2>
+
+            <div class="row">
+                <div class="col-md-6 mb-2">
+                    <p><strong>Created By:</strong> @Model.Ticket.CreatedByUser?.UserName</p>
+                </div>
+                <div class="col-md-6 mb-2">
+                    <p><strong>Assigned To:</strong> 
+                        @(Model.Ticket.AssignedToUser?.UserName ?? "<span class=\"text-muted\">Unassigned</span>")
+                    </p>
+                </div>
+                <div class="col-md-6 mb-2">
+                    <p>
+                        <strong>Status:</strong>
+                        <span class="badge bg-@(Model.Ticket.Status switch {
+                            "New" => "secondary",
+                            "In Progress" => "info",
+                            "Pending" => "warning",
+                            "Resolved" => "success",
+                            "Closed" => "dark",
+                            _ => "light"
+                        })">
+                            @Model.Ticket.Status
+                        </span>
+                    </p>
+                </div>
+                <div class="col-md-12">
+                    <p><strong>Description:</strong> @Model.Ticket.Description</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🔹 Timeline (History) -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4 class="mb-3">Assignment / Status History</h4>
+
+            @if (Model.History.Any())
+            {
+                <ul class="timeline list-unstyled">
+                    @foreach (var h in Model.History.OrderByDescending(x => x.ChangedAt))
+                    {
+                        <li class="timeline-item mb-4">
+                            <div class="timeline-badge bg-primary">
+                                <i class="bi bi-arrow-repeat text-white"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <div>
+                                    <strong>@h.Action</strong>
+                                    @if (!string.IsNullOrEmpty(h.OldValue) || !string.IsNullOrEmpty(h.NewValue))
+                                    {
+                                        <span class="text-muted"> from "@h.OldValue" → "@h.NewValue"</span>
+                                    }
+                                </div>
+                                <div class="small text-muted">
+                                    by <strong>@h.ChangedByUser?.UserName</strong> on @h.ChangedAt.ToString("g")
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p class="text-muted">No history available.</p>
+            }
+        </div>
+    </div>
+
+    <!-- 🔹 Comments -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h4 class="mb-3">Comments</h4>
+
+            @if (Model.Comments.Any())
+            {
+                <ul class="list-group list-group-flush">
+                    @foreach (var c in Model.Comments.OrderByDescending(x => x.CreatedAt))
+                    {
+                        <li class="list-group-item">
+                            <div class="d-flex align-items-start">
+                                <div class="avatar-circle me-3">
+                                    <span class="initials">
+                                        @c.CreatedByUser?.UserName?.Substring(0,1).ToUpper()
+                                    </span>
+                                </div>
+                                <div>
+                                    <div><strong>@c.CreatedByUser?.UserName</strong></div>
+                                    <div>@c.Comment</div>
+                                    <div class="small text-muted">@c.CreatedAt.ToString("g")</div>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p class="text-muted">No comments yet.</p>
+            }
+        </div>
+    </div>
+    <div>
+        <a asp-controller="Ticket" asp-action="ExportPdf" asp-route-id="@Model.Ticket.TicketId" 
+           class="btn btn-danger">
+           📄 Export as PDF
+        </a>
+
+    </div>
+</div>

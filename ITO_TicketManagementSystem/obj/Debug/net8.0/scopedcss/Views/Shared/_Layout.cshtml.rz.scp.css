@@ -1,0 +1,97 @@
+/* Navbar */
+.navbar[b-h204kg7dqu] {
+    background: #212529; /* dark background */
+    padding: 0.75rem 1rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.navbar-brand[b-h204kg7dqu] {
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: #f8f9fa !important;
+    letter-spacing: 0.5px;
+}
+
+.navbar-nav .nav-link[b-h204kg7dqu] {
+    color: #adb5bd;
+    margin: 0 0.5rem;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+    .navbar-nav .nav-link:hover[b-h204kg7dqu],
+    .navbar-nav .nav-link:focus[b-h204kg7dqu] {
+        color: #fff;
+        transform: translateY(-2px);
+    }
+
+    .navbar-nav .nav-link.active[b-h204kg7dqu] {
+        color: #ffc107; /* gold highlight */
+        font-weight: 600;
+        border-bottom: 2px solid #ffc107;
+    }
+/* Special Buttons (Home / Index) */
+.btn-home[b-h204kg7dqu], .btn-index[b-h204kg7dqu] {
+    font-weight: 600;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1.25rem;
+    transition: all 0.3s ease;
+}
+
+.btn-home[b-h204kg7dqu] {
+    background: #ffc107; /* gold */
+    color: #212529;
+    border: none;
+}
+
+    .btn-home:hover[b-h204kg7dqu] {
+        background: #e0a800; /* darker gold */
+        color: #fff;
+    }
+
+.btn-index[b-h204kg7dqu] {
+    background: transparent;
+    color: #ffc107;
+    border: 2px solid #ffc107;
+}
+
+    .btn-index:hover[b-h204kg7dqu] {
+        background: #ffc107;
+        color: #212529;
+    }
+/* Footer */
+.footer[b-h204kg7dqu] {
+    background: #212529;
+    color: #adb5bd;
+    text-align: center;
+    padding: 1rem 0;
+    margin-top: auto; /* pushes footer down naturally */
+}
+
+    .footer a[b-h204kg7dqu] {
+        color: #ffc107;
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+
+        .footer a:hover[b-h204kg7dqu] {
+            color: #fff;
+            text-decoration: underline;
+        }
+
+    .footer .social-icons a[b-h204kg7dqu] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        margin: 0 5px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.05);
+        color: #ffc107;
+        transition: all 0.3s ease;
+    }
+
+        .footer .social-icons a:hover[b-h204kg7dqu] {
+            background: #ffc107;
+            color: #212529;
+        }
