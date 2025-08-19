@@ -48,7 +48,7 @@ Make sure you have the following installed:
 
 ### 1️⃣ Clone the Repository
 ```bash
-git clone https://github.com/yourusername/ITO_TicketManagementSystem.git
+git clone https://github.com/hirusha-03/ResolveIt.git
 cd ITO_TicketManagementSystem
 2️⃣ Configure Database
 
