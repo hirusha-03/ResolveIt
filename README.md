@@ -55,8 +55,9 @@ cd ITO_TicketManagementSystem
 Edit appsettings.json and set your SQL Server connection string:
 
 "ConnectionStrings": {
-  "DefaulConnectionString": "Server=.;Database=Ticket_Management;Trusted_Connection=True;TrustServerCertificate=True;"
+  "DefaulConnectionString": "Server=(localdb)\\MSSQLLocalDB;Database=Ticket_Management;Trusted_Connection=True;"
 }
+
 
 3️⃣ Run Code-First Migrations
 dotnet ef migrations add InitialCreate
